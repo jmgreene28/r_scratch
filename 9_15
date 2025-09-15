@@ -1,0 +1,70 @@
+## scratch r code for practice
+# variable for length of r
+r_length <-  10 
+# variable for width of r
+r_width <-  5
+# area calcucation
+r_width * r_width
+# final calculation
+r_area <- r_width * r_width
+print(r_area)
+
+# Functions and their arguments 
+sqrt(64)
+sqrt(a)
+a <-  64
+sqrt(a)
+
+round(3.1459)
+?round
+args(round)
+round(3.14159, digits = 2)
+round(3.14159, 2)
+
+# More functions practice
+area_hectares <- c(21, 34, 39, 54, 55)
+area_hectares
+length(area_hectares)
+class(area_hectares)
+str(area_hectares)
+# add element to end of area_hectares vector
+area_hectares <- c(area_hectares, 90)
+length(area_hectares)
+# add element to front of area_hectares vector
+area_hectares <- c(25, area_hectares)
+print(area_hectares)
+
+# Data type practice 
+animals <- c("cat","rat","dog","beaver","deer")
+str(animals)
+length(animals)
+class(animals)
+has_tail <- c(TRUE, TRUE, TRUE, FALSE, TRUE)
+str(has_tail)
+class(has_tail)
+
+# Character and logical data types
+animals <- c("cat","rat","dog","beaver","deer")
+str(animals)
+length(animals)
+class(animals)
+has_tail <- c(TRUE, TRUE, TRUE, FALSE, TRUE)
+str(has_tail)
+class(has_tail)
+typeof(animals)
+
+
+#subsetting vectors with subvectors
+animals[2]
+animals[c(3, 2)]
+animals[2:4]
+animals[4:2]
+
+# exclude elements of a vector
+animals[-2]
+
+#repeat indices
+more_animals <- animals[c(1,2,1,3,4)]
+more_animals
+
+#conditional setting
