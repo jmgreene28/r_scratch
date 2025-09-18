@@ -1,0 +1,117 @@
+#Conditional subsetting
+has_tail
+animals[has_tail]
+animals[animals == "frog" | animals == "rat"]
+animals %in% c("frog", "rat", "cat") # this creates a logical 
+animals[animals %in% c("frog", "rat", "cat")] # create subcondition via c() operator
+#creating two objects to test against
+animals_to_find <- c("frog","rat","cat") #create vector with values you are looking for
+animals[animals %in% animals_to_find] #apply created vector in the condition 
+
+area_hectares <- c(21, 34, 39, 54, 55)
+area_hectares[area_hectares < 30 | area_hectares > 50]
+area_hectares[area_hectares > 40 & area_hectares < 90]
+
+"four" > "five"
+class("four")
+"five" > "four"
+length("four")
+str("four")
+?">"
+
+#missing values
+age <- c(2, 4, 4, NA, 6, NA, 3)
+max(age)  
+sum(age)
+max(age, na.rm = TRUE)
+sum(age, na.rm = TRUE)
+
+# Extract elements which are not missing values from 
+age <- c(2, 4, 4, NA,6, NA, 3)
+age[!is.na(age)]
+na.omit(age)
+
+#count number of missing values
+sum(is.na(age))
+
+#extract elements which are complete cases
+complete.cases(age)
+age[complete.cases(age)]
+
+#challenge
+population <- c(10,24,NA,18,NA,20)
+complete_pop <- population[complete.cases(population)]
+complete_pop
+sum(complete_pop)
+complete_pop > 20
+sum(na.omit(complete_pop > 20))
+
+#Matrix operations
+y <-matrix(1:20, nrow=5,ncol=4)
+y
+y[,4]     
+y[3,]
+y[2:4,1:3]
+
+#Lists
+my1 <- list(id="ID_1", "a_vector=animals", a_matrix=y, age=5.3)
+my1[2]
+my1["id"]
+
+#Dataframe
+mydf <- data.frame(ID=c(1:4),
+                   Color=c("red", "white", "red", NA),
+                   Passed=c(TRUE, TRUE, TRUE, FALSE),
+                   Weight=c(99, 54, 85,70),
+                   Height=c(1.78, 1.67, 1.82, 1.59)
+                   )
+mydf
+
+#challenge
+Housedf <- data.frame(name_First=c("James","Cooper","Brianna"),
+                   name_Last=c("Greene","Greene","Greene"),
+                   Gender=c("M","M","F")
+                       )
+Housedf
+
+#working with tabular data
+read.csv("C:/Users/jmgre/OneDrive/Documents/Grad School/DS501/Case Study 1/ms_statewide_2020_04_01.csv", header = TRUE)
+stops <- read_csv("C:/Users/jmgre/OneDrive/Documents/Grad School/DS501/Case Study 1/ms_statewide_2020_04_01.csv", header = TRUE)
+stops
+head(stops)
+tail(stops)
+install.packages("tidyverse")
+stops <- read_csv("C:/Users/jmgre/OneDrive/Documents/Grad School/DS501/Case Study 1/ms_statewide_2020_04_01.csv", header = TRUE)
+??read_csv
+stops <- read.csv("C:/Users/jmgre/OneDrive/Documents/Grad School/DS501/Case Study 1/ms_statewide_2020_04_01.csv", header = TRUE)
+stops
+str(stops) # structure of the object and information about the class, length and content of each column
+summary(stops) #summary statistics for each column
+dim(stops) # returns a vector with the number of rows in the first element, and the number of columns as the second element (the dimensions of the object)
+nrow(stops) #returns the rumber of rows
+ncol(stops) #returns the number of columns
+length(stops) #retunrs the number of columns
+head(stops) #shows the first 6 rows
+tail(stops) #shows the last 6 rows
+names(stops) # returns the column names
+rownames(stops) # returns the row names
+
+#challenge
+#challenge
+str(stops)
+nrow(stops)
+ncol(stops)
+stops_counties <- c(stops$county_name)
+stops_counties
+summary(stops_counties)
+str(stops_counties)
+summary(stops_counties)
+length(stops_counties)
+countyData <- c(table(stops_counties))
+countyData
+length(countyData)
+
+
+
+
+
