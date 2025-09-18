@@ -1,0 +1,101 @@
+library(readr)
+library(tidyverse)
+library(tidytext)
+library(tidymodels)
+library(quanteda)
+library(SnowballC)
+library(topicmodels)
+library(textrecipes)
+library(themis)
+library(discrim)
+library(vip)
+
+tweet <- "RT @PurpleForever19 @SciFiTV50 @ufpearth Cool! # #AI4PH #92. #whatif commentary 200 https://t.co/7Mde3"
+tweet
+str_detect(tweet,"@")
+# extract the first match with the pattern
+str_extract(tweet,"#[a-zA-Z0-9]*")
+#extract all matches to the pattern
+str_extract_all(tweet, "#[a=zA=Z0-9]*")
+#replace usernames (starts with @) with empty ""
+str_replace_all(tweet, "@[a-z,A-Z]*[0-9]*[a-z,A-Z]*", "USERNAME")
+
+
+### UDF to remove urls
+removeURLs <- function(tweet) {
+  return(gsub("http\\S+", "", tweet))
+}
+tweet
+removeURLs(tweet)
+
+### UDF to remove RT form tweets
+removeUsernamesWithRT <- function(tweet) {
+  return(gsub("^RT @[a-z,A-Z]*[0-9]*[a-z,A-Z]*[0-9]*: ","", tweet))
+}
+tweet
+removeUsernamesWithRT(tweet)
+###UDF to remove usernames (@ pattern)
+removeUsernames <- function(tweet) {
+  return(gsub("@[a-z,A-Z]*[0-9]*[a-z,A-Z]*[0-9]*","", tweet))
+}
+removeUsernames(tweet)
+##UDF to remove hashtags
+removeHashtagSignOnly <- function(tweet) {
+  return(gsub("#","", tweet))
+}
+tweet
+removeHashtagSignOnly(tweet)
+
+urlfile_class <- "https://raw.githubusercontent.com/tianyuan09/ai4ph2022/main/sampleTwitterDataForClassification.csv"
+tweetsDF <- read.csv(url(urlfile_class), encoding = "UTF-8")
+
+tweetsDF$processed_tweet <- apply(tweetsDF['tweet'], 2, removeURLs) 
+tweetsDF$processed_tweet <- apply(tweetsDF['processed_tweet'],2, removeUsernamesWithRT) 
+tweetsDF$processed_tweet <- apply(tweetsDF['processed_tweet'],2, removeUsernames)
+tweetsDF$processed_tweet <- apply(tweetsDF['processed_tweet'],2, removeHashtagSignOnly)
+
+head(tweetsDF)
+print(tweetsDF)
+
+###Tokenization###
+
+text_df <- tweetsDF %>% 
+  select(X,annotation,processed_tweet) %>%
+  unnest_tokens(word, processed_tweet)
+nrow(text_df)
+
+tweetsDF$processed_tweet[1]
+head(text_df,10) # take a look at first 10 rows
+
+#stop Words
+data(stop_words)
+unique(stop_words$lexicon)
+table(stop_words$lexicon)
+head(stop_words[stop_words$lexicon == "snowball",],15)
+nrow(text_df) #count before removal
+text_df <- text_df %>%
+    anti_join(stop_words[stop_words$lexicon == "snowball",], by = "word")
+nrow(text_df) # count after removal
+
+#stemming
+text_df %>%
+    count(word, sort = TRUE)%>%
+    nrow()
+
+text_df = text_df %>%
+    mutate(stem = wordStem(word))
+text_df %>%
+  count(stem, sort = TRUE) %>%
+  nrow()
+
+text_df %>% group_by(word) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count)) %>%
+  head(10)
+
+text_df %>% count(word, sort = TRUE) %>%
+  filter(n > 200) %>%
+  mutate(word = reorder(word,n)) %>%
+  ggplot(aes(x = n, y = word)) + geom_col() +
+  labs(title = "Words with > 200 occurences in tweets")
+
