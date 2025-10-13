@@ -1,0 +1,42 @@
+install.packages("readr")
+install.packages("dplyr")
+install.packages("ggplot2")
+install.packages("purrr")
+install.packages("magrittr")
+install.packages("stringr")
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(magrittr)
+library(stringr)
+movielens = 'https://raw.githubusercontent.com/dnchari/DS501_MovieLens/master/Results/unifiedMLDataMulti.csv'
+mlData = read.csv(movielens)
+head(mlData)
+
+reviewAvgs <- mlData %>% group_by(movie_title) %>% summarise(avg = mean(rating))
+reviewAvgs
+
+ggplot(data = reviewAvgs) + 
+    aes(x = movie_title, y = avg) + 
+  geom_bar(stat = 'identity')
+
+#histogram of movies 4.5+
+moviesFavorites <- mlData %>% filter(rating>4.5)
+
+ggplot(data = moviesFavorites) + 
+  aes(x=user_id, y=rating) + 
+  geom_bar(stat="identity")
+
+#histogram of movies Men rate 4.5+
+moviesFavoriesMen <-moviesFavorites %>% filter(gender == 'M')
+
+ggplot(data = moviesFavoriesMen) + 
+  aes(x=user_id, y=rating) + 
+  geom_bar(stat="identity")
+
+#histogram of movies womenen rate 4.5+
+moviesFavoritesWomen <- moviesFavorites %>% filter(gender == 'F')
+
+ggplot(data = moviesFavoritesWomen) + 
+  aes(x=user_id, y=rating) + 
+  geom_bar(stat="identity")
