@@ -1,0 +1,162 @@
+#1 - Data visualization
+
+#1.1.1 - Prerequisites - install packages being used
+
+install.packages("tidyverse")
+install.packages("palmerpenguins")
+install.packages("ggthemes")
+library(tidyverse)
+library(palmerpenguins)
+library(ggthemes)
+
+#1.2 - First steps - Write down exact data questions being asked. What is the dependent variable? What is the independent variable?
+
+#1.2.1 - The penguins data frame
+
+penguins
+view(penguins)
+
+#1.2.3 - Creating a ggplot
+
+#function ggplot()
+
+ggplot (data = penguins)
+
+#mapping arguments 
+ggplot(data = penguins, 
+       mapping = aes(x = flipper_length_mm, y = body_mass_g)
+       )
+
+#defining a geom: the geometrical object that a plot uses to represent data (geom_bar(), geom_line(), geom_boxplot(), geom_point())
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) + 
+  geom_point()
+
+#1.2.4 - Adding aesthetics and layers
+
+ggplot (
+  data = penguins, 
+  mapping = aes(x = flipper_length_mm, y = body_mass_g,  color = species)
+) + 
+  geom_point()
+
+#add trend lines
+ggplot (
+  data = penguins, 
+  mapping = aes(x = flipper_length_mm, y = body_mass_g,  color = species)
+) + 
+  geom_point() +
+  geom_smooth(method = "lm") # specifies linear model 
+
+#smooth linear model globally
+
+ggplot (
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g) 
+  ) +
+    geom_point(mapping = aes(color = species)) +
+    geom_smooth(method = "lm")
+
+#improve label visual clarity
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) + 
+  geom_point(mapping = aes(color = species, shape = species)) +
+  geom_smooth(method = "lm")
+
+#add titles and captions
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+)  +
+  geom_point(aes(color = species, shape = species)) + 
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Body mass and flipper length",
+    subtitle = "Dimensions for Adelie, Chinstrap and Gentoo Penguins", 
+    x = "Flipper length (mm)" , y = "Body mass (g)",
+    color = "Species", shape = "Species"
+  ) + 
+    scale_color_colorblind()
+
+#1.2.5 - Exercies
+
+str(penguins)
+
+?penguins
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = bill_length_mm, y = bill_depth_mm)
+) +
+  geom_point()
+
+ggplot(
+  data = penguins,
+  mapping = aes(x = species, y = bill_depth_mm)
+) +
+  geom_point()
+
+ggplot(data = penguins, mapping = aes(x =flipper_length_mm, y=body_mass_g)) + 
+  geom_point()
+
+?geom_point #na.rm - If FALSE, the default, missing values are removed with a warning. If TRUE, missing values are silently removed.
+
+ggplot(
+  data = penguins, 
+  mapping = aes(x = flipper_length_mm, y = body_mass_g, color = island)
+) + 
+  geom_point() +
+  geom_smooth(se = FALSE)
+
+ggplot(
+  data = penguins, 
+  mapping = aes(x = flipper_length_mm, y = body_mass_g, color = bill_depth_mm)
+) + 
+  geom_point() +
+  geom_smooth(se = TRUE)
+
+#1.3 ggplot 2 calls
+
+#write calls to ggplot more consicely 
+
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) + 
+  geom_point()
+
+penguins |>
+  ggplot(aes(x = flipper_length_mm, y = body_mass_g)) + 
+  geom_point()
+
+#1.4 Visiualizing distributions 
+
+#1.4.1 A categorical variable
+
+#display how many observations exist within a variable via bar chart
+
+ggplot(penguins, aes(x = species)) + 
+  geom_bar()
+
+#reorder into aescending values
+
+ggplot(penguins, aes(x = fct_infreq(species))) + 
+  geom_bar()
+
+#1.4.2 A numerical variable
+
+ggplot(penguins, aes(x = body_mass_g)) +
+  geom_histogram(binwidth = 200)
+
+ggplot(penguins, aes(x = body_mass_g)) +
+  geom_histogram(binwidth = 20)
+
+ggplot(penguins, aes(x = body_mass_g)) +
+  geom_histogram(binwidth = 2000)
+
+ggplot(penguins, aes(x = body_mass_g)) +
+  geom_density()
