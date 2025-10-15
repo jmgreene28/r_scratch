@@ -1,0 +1,50 @@
+#1.5 - Visualizing relationships
+
+#1.5.1 - A numerical and a categorical variable
+
+library(tidyverse)
+library(palmerpenguins)
+library(ggthemes)
+
+penguins
+
+ggplot(penguins, aes(x = species, y = body_mass_g)) +
+  geom_boxplot()
+
+ggplot(penguins, aes(x = body_mass_g, colour = species)) +
+    geom_density(linewidth = 0.75)
+
+ggplot(penguins, aes(X = body_mass_g, color = species, fill = species)) +
+  geom_density(alpha = 0.5)
+
+#1.5.2 - Two categorical variables
+
+ggplot(penguins, aes(x = island, fill = species)) +
+  geom_bar()
+
+ggplot(penguins, aes(x = island, fill = species)) +
+  geom_bar(position = "fill")
+
+#1.5.3 - Two numerical relationships
+
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point()
+
+#1.5.4 - Three or more variables
+
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point(aes(colour = species, shape = island))
+
+#facet_wrap()
+
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) + 
+  geom_point(aes(color = species, shape = species)) + 
+  facet_wrap(~island)
+
+#1.6 - Saving your plots
+
+#ggsave()
+
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) + 
+  geom_point()
+ggsave(filename = "penguin-ploat.png")
