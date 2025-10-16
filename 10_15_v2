@@ -1,0 +1,65 @@
+install.packages("readr")
+install.packages("dplyr")
+install.packages("ggplot2")
+install.packages("purrr")
+install.packages("magrittr")
+install.packages("stringr")
+install.packages("tidyverse")
+install.packages("RSQLite")
+library(dplyr)
+library(readr)
+library(ggplot2)
+library(magrittr)
+library(stringr)
+library(tidyverse)
+library(RSQLite)
+movielens = 'https://raw.githubusercontent.com/dnchari/DS501_MovieLens/master/Results/unifiedMLDataMulti.csv'
+mlData = read.csv(movielens)
+view(mlData)
+
+#convert to integer
+mlData$rating <- as.integer(mlData$rating)
+
+#calcuate average rating of movies by movie_title
+
+averageRating <- mlData %>%
+  group_by(movie_title) %>%
+  summarise(avg_rating = mean(rating, na.rm = TRUE)) %>%
+  arrange(desc(avg_rating))
+
+knitr::kable(head(averageRating)) %>% head(10)
+
+#fitered average rating to min number of reviews
+
+min_ratings <- 25
+filteredavgRating <-  mlData %>%
+  group_by(movie_title) %>%
+  summarise(
+    avg_rating = mean(rating, na.rm = TRUE),
+    rating_count = n()
+  ) %>%
+  filter(rating_count >= min_ratings) %>%
+  arrange(desc(avg_rating))
+
+knitr::kable(head(filteredavgRating)) %>% head(10)
+
+  
+#plot distri#plot distribution of ratings
+ggplot(mlData,
+       aes(x = rating)) + 
+  geom_histogram(binwidth = .5, fill = "skyblue", color = "black") +
+  labs(title = "Dist. of Movie Rating", 
+       x = "Rating",
+      y = "Frequency") +
+  theme_dark()
+
+#top 10 movies with average rating >4.5
+
+
+
+
+#plot top 10
+ggplot(
+  top_10, aes(x = movie_title, y = rating)) +
+  geom_bar(stat = "identity", fill = "skyblue") +
+  labs(title = "Top 10 rated Movies")
